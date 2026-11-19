@@ -233,16 +233,16 @@ function openItem(id) {
 function saveItem() {
   const raw = readItem();
   const errors = {};
-  if (!raw.name.trim()) errors.name = "Escribe el nombre";
-  if (!CATEGORIES.some((cat) => cat.id === raw.category)) errors.category = "Elige una categoría";
-  if (!UNITS.includes(raw.unit)) errors.unit = "Elige la unidad";
+  if (!raw.name.trim()) errors.name = "Escribe el nombre del producto.";
+  if (!CATEGORIES.some((cat) => cat.id === raw.category)) errors.category = "Elige una categoría.";
+  if (!UNITS.includes(raw.unit)) errors.unit = "Elige la unidad.";
   const stock = parseNum(raw.stock);
   const min = parseNum(raw.min);
   const cost = parseNum(raw.cost);
-  if (stock === null || stock < 0) errors.stock = "Usa un número de cero en adelante";
-  if (min === null || min < 0) errors.min = "Usa un número de cero en adelante";
-  if (cost === null || cost < 0) errors.cost = "Usa un número de cero en adelante";
-  if (raw.expiry && !/^\d{4}-\d{2}-\d{2}$/.test(raw.expiry)) errors.expiry = "Revisa la fecha";
+  if (stock === null || stock < 0) errors.stock = "Escribe la cantidad con un número desde cero.";
+  if (min === null || min < 0) errors.min = "Escribe con cuánto hay que avisar, desde cero.";
+  if (cost === null || cost < 0) errors.cost = "Escribe el precio de compra, desde cero.";
+  if (raw.expiry && !/^\d{4}-\d{2}-\d{2}$/.test(raw.expiry)) errors.expiry = "Revisa la fecha de vencimiento.";
   if (Object.keys(errors).length) {
     modal.draft = { ...modal.draft, ...raw };
     modal.errors = errors;
@@ -266,7 +266,7 @@ function saveItem() {
   state.flashId = item.id;
   closeModal();
   render();
-  toast("Insumo creado");
+  toast("Producto agregado");
   armFlash(item.id);
 }
 
@@ -290,8 +290,8 @@ function askDelete(id) {
   if (!item) return;
   modal = {
     kind: "confirm",
-    title: "Eliminar insumo",
-    text: `¿Eliminar ${item.name}? Sale del inventario. El historial conserva el nombre.`,
+    title: "Eliminar producto",
+    text: `Vas a borrar ${item.name}. No se puede deshacer.`,
     confirm: "Eliminar",
     tone: "danger",
     onConfirm: () => {
@@ -299,7 +299,7 @@ function askDelete(id) {
       deleteItem(id);
       closeModal();
       render();
-      toast("Insumo eliminado");
+      toast("Producto eliminado");
     },
   };
   renderModal();
@@ -345,12 +345,12 @@ function saveMove() {
     return;
   }
   const labels = {
-    entrada: "Entrada registrada",
-    salida: "Salida registrada",
-    merma: "Merma registrada",
-    ajuste: "Ajuste registrado",
+    entrada: "Anotamos la entrada",
+    salida: "Anotamos la salida",
+    merma: "Anotamos lo que se dañó",
+    ajuste: "Anotamos la corrección",
   };
-  const message = labels[draft.type] || "Movimiento registrado";
+  const message = labels[draft.type] || "Anotación guardada";
   closeModal();
   render();
   toast(message);
@@ -359,9 +359,9 @@ function saveMove() {
 function askReset() {
   modal = {
     kind: "confirm",
-    title: "Restablecer demo",
-    text: "Se borran los cambios de este navegador y vuelven los 30 insumos de ejemplo.",
-    confirm: "Restablecer",
+    title: "Volver a los datos de ejemplo",
+    text: "Se borran tus cambios en este navegador y vuelven los 30 productos de ejemplo. No se puede deshacer.",
+    confirm: "Volver a los datos",
     tone: "olive",
     onConfirm: () => {
       resetDemo();
@@ -377,7 +377,7 @@ function askReset() {
       document.getElementById("q").value = "";
       closeModal();
       render();
-      toast("Demo restablecida");
+      toast("Volvieron los datos de ejemplo");
     },
   };
   renderModal();

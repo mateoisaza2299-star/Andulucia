@@ -93,7 +93,7 @@ export function addItem(input) {
     expiry: input.expiry || "",
   };
   state.items.push(item);
-  if (item.stock > 0) pushMove(item, "entrada", item.stock, 1, "Stock inicial");
+  if (item.stock > 0) pushMove(item, "entrada", item.stock, 1, "Cantidad inicial");
   save();
   return item;
 }
@@ -111,7 +111,7 @@ export function updateItem(id, input) {
   item.cost = Math.round(input.cost);
   item.supplier = input.supplier.trim();
   item.expiry = input.expiry || "";
-  if (diff !== 0) pushMove(item, "ajuste", Math.abs(diff), diff > 0 ? 1 : -1, "Edición de stock");
+  if (diff !== 0) pushMove(item, "ajuste", Math.abs(diff), diff > 0 ? 1 : -1, "Cambio de cantidad");
   save();
   return item;
 }
@@ -125,11 +125,11 @@ export function deleteItem(id) {
 
 export function registerMovement({ itemId, type, qty, note, direction }) {
   const item = state.items.find((row) => row.id === itemId);
-  if (!item) return { ok: false, error: "Elige un insumo" };
+  if (!item) return { ok: false, error: "Elige un producto" };
   const amount = round1(qty);
   if (!(amount > 0)) return { ok: false, error: "La cantidad debe ser mayor a cero" };
   const sign = type === "entrada" ? 1 : type === "ajuste" ? (direction === "add" ? 1 : -1) : -1;
-  if (sign < 0 && item.stock <= 0) return { ok: false, error: "Sin stock para descontar" };
+  if (sign < 0 && item.stock <= 0) return { ok: false, error: "Ya no queda. Anota una entrada primero." };
   const applied = sign < 0 ? round1(Math.min(amount, item.stock)) : amount;
   item.stock = round1(item.stock + sign * applied);
   pushMove(item, type, applied, sign, note);
@@ -139,12 +139,12 @@ export function registerMovement({ itemId, type, qty, note, direction }) {
 
 export function adjust(id, direction) {
   const item = state.items.find((row) => row.id === id);
-  if (!item) return { ok: false, error: "No está el insumo" };
+  if (!item) return { ok: false, error: "Ese producto ya no está" };
   return registerMovement({
     itemId: id,
     type: direction > 0 ? "entrada" : "salida",
     qty: stepFor(item.unit),
-    note: "Ajuste rápido",
+    note: "Cambio con los botones",
     direction: direction > 0 ? "add" : "sub",
   });
 }

@@ -2,7 +2,7 @@ import { esc, fmtQty, money } from "./model.js";
 
 export function donutSvg(slices, total) {
   if (!total) {
-    return `<p class="empty">Todavía no hay valor en inventario.</p>`;
+    return `<p class="empty">Todavía no hay valor en la cocina. Agrega un producto con precio.</p>`;
   }
   const r = 68;
   const c = 2 * Math.PI * r;
@@ -42,7 +42,7 @@ export function weekSvg(days) {
 }
 
 export function criticalHtml(items) {
-  if (!items.length) return `<p class="empty">Sin insumos para comparar.</p>`;
+  if (!items.length) return `<p class="empty">Aún no hay productos para comparar.</p>`;
   return `<ol class="hbars">${items
     .map((item) => {
       const max = Math.max(item.stock, item.min, 0.0001);

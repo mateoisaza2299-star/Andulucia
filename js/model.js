@@ -12,17 +12,17 @@ export const UNITS = ["kg", "g", "L", "ml", "und", "paq", "atado"];
 
 export const STATUSES = [
   { id: "all", label: "Todos" },
-  { id: "ok", label: "OK" },
-  { id: "low", label: "Bajo" },
-  { id: "out", label: "Agotado" },
+  { id: "ok", label: "Bien" },
+  { id: "low", label: "Pocas" },
+  { id: "out", label: "Se acabó" },
   { id: "soon", label: "Por vencer" },
 ];
 
 export const MOVE_TYPES = [
   { id: "entrada", label: "Entrada" },
   { id: "salida", label: "Salida" },
-  { id: "merma", label: "Merma" },
-  { id: "ajuste", label: "Ajuste" },
+  { id: "merma", label: "Se dañó" },
+  { id: "ajuste", label: "Corregir" },
 ];
 
 const FALLBACK_CATEGORY = { id: "otra", name: "Otra", short: "Otra", color: "#6E6A62", icon: "box" };
@@ -167,13 +167,13 @@ export function badgeList(item) {
 }
 
 export function statusLabel(code, item) {
-  if (code === "out") return "Agotado";
-  if (code === "low") return "Bajo";
+  if (code === "out") return "Se acabó";
+  if (code === "low") return "Pocas";
   if (code === "soon") {
     const d = item ? daysUntil(item.expiry) : 1;
     return d !== null && d < 0 ? "Vencido" : "Por vencer";
   }
-  return "OK";
+  return "Bien";
 }
 
 export function hitItem(item, query) {
@@ -228,8 +228,8 @@ export function alertItems(items) {
 
 export function alertDetail(item) {
   const parts = [];
-  if (item.stock <= 0) parts.push(`Agotado · mín ${fmtQty(item.min)} ${item.unit}`);
-  else if (item.stock <= item.min) parts.push(`Stock ${fmtQty(item.stock)} ${item.unit} · mín ${fmtQty(item.min)}`);
+  if (item.stock <= 0) parts.push(`Se acabó · Avisar con ${fmtQty(item.min)} ${item.unit}`);
+  else if (item.stock <= item.min) parts.push(`Hay ${fmtQty(item.stock)} ${item.unit} · Avisar con ${fmtQty(item.min)}`);
   if (flags(item).soon) parts.push(expiryLabel(item));
   return parts.join(" · ");
 }
